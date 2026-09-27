@@ -56,3 +56,35 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+# Validación en Línea del Cupo de Combustible Subvencionado
+
+Prototipo que permite consultar y registrar en línea el cupo de combustible subvencionado de un vehículo, identificado por placa, en el punto de despacho de una estación de servicio.
+
+## Tecnologías
+- PHP 8 / Laravel 13
+- MySQL
+- Blade, JavaScript (Fetch API)
+- Tesseract.js para reconocimiento óptico de caracteres
+
+## Instalación
+1. Clonar el repositorio
+2. composer install
+3. Copiar .env.example a .env y configurar los datos de la base de datos
+4. php artisan key:generate
+5. php artisan migrate
+6. php artisan db:seed --class=VehiculosDemoSeeder
+7. php artisan serve
+
+## Acceso de prueba
+- Código de estación: EST-001
+- Contraseña: clave123
+
+## Placas de prueba
+| Placa | Vehículo | Tipo de uso |
+|---|---|---|
+| 1234ABC | Toyota Corolla 2015 | Particular |
+| 5678XYZ | Suzuki Grand Vitara 2018 | Particular |
+| 2468DEF | Toyota Hiace 2012 | Transporte público |
+| 1357GHI | Massey Ferguson 265 | Agrícola |
+| 9753JKL | Toyota Hilux 2010 | Carga |
