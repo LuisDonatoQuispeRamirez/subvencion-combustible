@@ -1,18 +1,31 @@
-FROM richarvey/nginx-php-fpm:latest
+FROM php:8.4-fpm
 
+# Instalar dependencias del sistema y extensiones necesarias para Laravel
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    nginx
+
+# Instalar Composer oficial
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Configurar directorio de trabajo
+WORKDIR /var/www/html
+
+# Copiar archivos del proyecto
 COPY . .
 
-ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --ignore-platform-reqs
+# Instalar dependencias de Composer
+RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader
 
-ENV WEBROOT=/var/www/html/public
-ENV PHP_ERRORS_STDERR=1
-ENV RUN_SCRIPTS=1
-ENV REAL_IP_HEADER=1
-ENV SKIP_COMPOSER=1
+# Ajustar permisos (si es necesario)
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-ENV APP_ENV=production
-ENV APP_DEBUG=false
-ENV LOG_CHANNEL=stderr
-
-CMD ["/start.sh"]
+# Puerto y comando de inicio
+EXPOSE 80
+CMD php artisan config:cache && php artisan route:cache && php artisan serve --host=0.0.0.0 --port=80
