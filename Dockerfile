@@ -1,38 +1,39 @@
 FROM php:8.4-fpm
 
-# Instalar dependencias del sistema y extensiones necesarias
+# Instalar dependencias esenciales del sistema y Nginx
 RUN apt-get update && apt-get install -y \
     git \
     curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
     libpq-dev \
     zip \
     unzip \
-    nginx
+    nginx && \
+    rm -rf /var/lib/apt/lists/*
 
-# Instalar extensiones de PHP requeridas por Laravel y PostgreSQL
-RUN docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
+# Instalar instalador rápido de extensiones de PHP
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions pdo_pgsql mbstring exif pcntl bcmath gd
 
 # Copiar ejecutable de Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copiar archivos del proyecto
+# Copiar código del proyecto
 COPY . .
 
-# Dar permisos de ejecución al script de despliegue
+# Permisos de ejecución para el script de despliegue
 RUN chmod +x ./scripts/00-laravel-deploy.sh
 
-# Instalar dependencias PHP
+# Instalar dependencias PHP de Laravel
 RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader
 
-# Ajustar permisos de carpetas de Laravel
+# Ajustar permisos de directorios de almacenamiento y caché
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80
 
-# Ejecutar script de despliegue (migraciones + seeders) y levantar el servidor
+# Ejecutar el script de despliegue y servir la aplicación
 CMD ./scripts/00-laravel-deploy.sh && php artisan serve --host=0.0.0.0 --port=80
