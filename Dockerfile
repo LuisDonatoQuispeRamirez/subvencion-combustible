@@ -3,7 +3,7 @@ FROM richarvey/nginx-php-fpm:latest
 COPY . .
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader
+RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader --ignore-platform-reqs
 
 ENV WEBROOT=/var/www/html/public
 ENV PHP_ERRORS_STDERR=1
