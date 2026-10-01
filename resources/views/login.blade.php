@@ -12,7 +12,7 @@
     <header class="topbar">
         <div class="topbar-brand">
             <i data-lucide="fuel"></i>
-            <h1>Consulta y registro de despacho</h1>
+            <h1>CONSULTA Y REGISTRO DE DESPACHO</h1>
         </div>
     </header>
 
