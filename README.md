@@ -79,7 +79,7 @@ Prototipo que permite consultar y registrar en línea el cupo de combustible sub
 ## Acceso de prueba
 - Código de estación: EST-001
 - Contraseña: clave123
-
+ 
 ## Placas de prueba
 | Placa | Vehículo | Tipo de uso |
 |---|---|---|
